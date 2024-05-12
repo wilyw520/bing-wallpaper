@@ -1,0 +1,39 @@
+name: Random Bing Wallpaper
+
+on: [push]
+
+jobs:
+  bing_wallpaper:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install requests library
+      run: pip install requests
+
+    - name: Get Bing Wallpaper
+      run: |
+        import os
+        import requests
+        import random
+
+        response = requests.get('https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=en-US')
+        data = response.json()
+        image_url = data['images'][random.randint(0,7)]['url']
+
+        image_response = requests.get('https://www.bing.com' + image_url)
+        with open('bing_wallpaper.jpg', 'wb') as f:
+            f.write(image_response.content)
+
+    - name: Upload Bing Wallpaper
+      uses: actions/upload-artifact@v2
+      with:
+        name: bing_wallpaper
+        path: bing_wallpaper.jpg
