@@ -1,6 +1,8 @@
 name: Random Bing Wallpaper
 
-on: [push]
+on:
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   bing_wallpaper:
